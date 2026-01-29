@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Optimizer Pro - DAA Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151932;
+            --bg-tertiary: #1e2139;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-danger: #ef4444;
+            --accent-warning: #f59e0b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: rgba(148, 163, 184, 0.1);
+            --glass-bg: rgba(30, 33, 57, 0.7);
+            --glass-border: rgba(148, 163, 184, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgShift 20s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-100px) translateX(50px); }
+            50% { transform: translateY(-200px) translateX(-50px); }
+            75% { transform: translateY(-100px) translateX(100px); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        /* Aggregate Dashboard */
+        .aggregate-dashboard {
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aggregate-dashboard::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .aggregate-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .aggregate-title {
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .aggregate-percentage {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            margin: 1rem 0;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .aggregate-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .aggregate-stats {
+            margin-top: 1rem;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Threshold Input */
+        .threshold-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .threshold-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .threshold-input-wrapper {
+            position: relative;
+            flex: 0 0 150px;
+        }
+
+        .threshold-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .threshold-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Table Section */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .table-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .btn-add {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Custom Table */
+        .custom-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+        }
+
+        .custom-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .custom-table tbody tr {
+            background: var(--bg-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .custom-table tbody tr:hover {
+            background: var(--bg-tertiary);
+            transform: scale(1.01);
+        }
+
+        .custom-table tbody td {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .custom-table tbody td:first-child {
+            border-left: 1px solid var(--border-color);
+            border-radius: 12px 0 0 12px;
+        }
+
+        .custom-table tbody td:last-child {
+            border-right: 1px solid var(--border-color);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .table-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .table-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-remove {
+            padding: 0.5rem 1rem;
+            background: var(--accent-danger);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .btn-remove:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, var(--accent-success), #059669);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            flex: 0 0 auto;
+            padding: 1.25rem 2rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-muted);
+        }
+
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .result-card.safe::before {
+            background: linear-gradient(90deg, var(--accent-success), #059669);
+        }
+
+        .result-card.danger::before {
+            background: linear-gradient(90deg, var(--accent-danger), #dc2626);
+        }
+
+        .result-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border-color: rgba(148, 163, 184, 0.4);
+        }
+
+        .result-subject {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .result-percentage {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-card.safe .result-percentage {
+            background: linear-gradient(135deg, var(--accent-success), #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-card.danger .result-percentage {
+            background: linear-gradient(135deg, var(--accent-danger), #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            margin: 0.5rem 0;
+        }
+
+        .result-info span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-info strong {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .result-badge.safe {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success);
+        }
+
+        .result-badge.danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-danger);
+        }
+
+        /* Complexity Info */
+        .complexity-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .complexity-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .complexity-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .complexity-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .complexity-list li:last-child {
+            border-bottom: none;
+        }
+
+        .complexity-list strong {
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .aggregate-percentage {
+                font-size: 3rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+            }
+
+            .threshold-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .threshold-input-wrapper {
+                width: 100%;
+            }
+
+            .custom-table {
+                font-size: 0.85rem;
+            }
+
+            .result-percentage {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <div class="particle" style="top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 20%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 60%; left: 20%; animation-delay: 4s;"></div>
+    <div class="particle" style="top: 80%; left: 70%; animation-delay: 6s;"></div>
+    <div class="particle" style="top: 40%; left: 90%; animation-delay: 8s;"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="icon">🎓</div>
+            <h1>Attendance Optimizer Pro</h1>
+            <p class="subtitle">Design & Analysis of Algorithms • O(N) Complexity</p>
+        </div>
+
+        <!-- Aggregate Dashboard -->
+        <div class="glass-card aggregate-dashboard">
+            <div class="aggregate-content">
+                <div class="aggregate-title">Overall Attendance</div>
+                <div id="aggregatePercentage" class="aggregate-percentage">0.00%</div>
+                <div id="aggregateStatus" class="aggregate-badge">Calculating...</div>
+                <div class="aggregate-stats">
+                    <span id="aggregateStats">0/0 lectures attended</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Threshold Setting -->
+        <div class="glass-card">
+            <div class="threshold-section">
+                <div class="threshold-label">
+                    <i class="fas fa-sliders-h"></i> Minimum Attendance Threshold
+                </div>
+                <div class="threshold-input-wrapper">
+                    <input type="number" id="thresholdInput" class="threshold-input" value="75" min="0" max="100">
+                </div>
+            </div>
+        </div>
+
+        <!-- Subject Table -->
+        <div class="glass-card">
+            <div class="table-header">
+                <h2 class="table-title">Subject Details</h2>
+                <button id="addSubjectBtn" class="btn-add">
+                    <i class="fas fa-plus"></i> Add Subject
+                </button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Subject Name</th>
+                            <th>Total Lectures</th>
+                            <th>Present</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subjectTableBody">
+                        <!-- Dynamic rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button id="calculateBtn" class="btn-primary">
+                <i class="fas fa-calculator"></i> Calculate Attendance
+            </button>
+            <button id="resetBtn" class="btn-secondary">
+                <i class="fas fa-redo"></i> Reset
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="glass-card">
+                <h2 class="table-title" style="margin-bottom: 0;">
+                    <i class="fas fa-chart-line"></i> Attendance Analysis
+                </h2>
+            </div>
+            <div id="resultsContainer" class="results-grid">
+                <!-- Result cards -->
+            </div>
+        </div>
+
+        <!-- Complexity Info -->
+        <div class="glass-card complexity-card">
+            <div class="complexity-title">
+                <i class="fas fa-bolt"></i> Algorithm Complexity
+            </div>
+            <ul class="complexity-list">
+                <li>
+                    <i class="fas fa-clock" style="color: var(--accent-primary);"></i>
+                    <strong>Time Complexity:</strong> O(N) where N = number of subjects
+                </li>
+                <li>
+                    <i class="fas fa-memory" style="color: var(--accent-secondary);"></i>
+                    <strong>Space Complexity:</strong> O(N) for storing results
+                </li>
+                <li>
+                    <i class="fas fa-plus-circle" style="color: var(--accent-success);"></i>
+                    <strong>Add/Remove Subject:</strong> O(1) DOM operation
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Attendance Optimizer Pro - Frontend Logic
+        const API_URL = 'http://localhost:5000/api';
+
+        // DOM Elements
+        const subjectTableBody = document.getElementById('subjectTableBody');
+        const addSubjectBtn = document.getElementById('addSubjectBtn');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const thresholdInput = document.getElementById('thresholdInput');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const aggregatePercentage = document.getElementById('aggregatePercentage');
+        const aggregateStatus = document.getElementById('aggregateStatus');
+        const aggregateStats = document.getElementById('aggregateStats');
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Attendance Optimizer Pro initialized');
+            addSubjectRow();
+            setupEventListeners();
+        });
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            addSubjectBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                addSubjectRow();
+            });
+
+            calculateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                calculateAttendance();
+            });
+
+            resetBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetForm();
+            });
+        }
+
+        // Add Subject Row - O(1)
+        function addSubjectRow() {
+            const row = document.createElement('tr');
+            row.style.animation = 'fadeInUp 0.4s ease';
+            row.innerHTML = `
+                <td><input type="text" class="table-input subject-name" placeholder="e.g., TCS-401" maxlength="50"></td>
+                <td><input type="number" class="table-input total-lectures" placeholder="0" min="0" max="999"></td>
+                <td><input type="number" class="table-input present-lectures" placeholder="0" min="0" max="999"></td>
+                <td><button type="button" class="btn-remove" onclick="removeSubjectRow(this)"><i class="fas fa-trash"></i></button></td>
+            `;
+            subjectTableBody.appendChild(row);
+        }
+
+        // Remove Subject Row - O(1)
+        function removeSubjectRow(button) {
+            const row = button.closest('tr');
+            if (subjectTableBody.children.length > 1) {
+                row.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => row.remove(), 300);
+            } else {
+                showNotification('At least one subject row is required.', 'warning');
+            }
+        }
+
+        // Collect Subject Data
+        function collectSubjectData() {
+            const rows = subjectTableBody.querySelectorAll('tr');
+            const subjects = [];
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.subject-name').value.trim();
+                const total = parseInt(row.querySelector('.total-lectures').value) || 0;
+                const present = parseInt(row.querySelector('.present-lectures').value) || 0;
+                
+                if (name && total >= 0 && present >= 0) {
+                    subjects.push({ subject: name, total: total, present: present });
+                }
+            });
+            
+            return subjects;
+        }
+
+        // Calculate Attendance
+        async function calculateAttendance() {
+            const subjects = collectSubjectData();
+            
+            if (subjects.length === 0) {
+                showNotification('Please add at least one subject with valid data.', 'warning');
+                return;
+            }
+            
+            const threshold = parseInt(thresholdInput.value) || 75;
+            
+            if (threshold < 0 || threshold > 100) {
+                showNotification('Threshold must be between 0 and 100.', 'danger');
+                return;
+            }
+            
+            calculateBtn.classList.add('loading');
+            calculateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating...';
+            
+            try {
+                const response = await fetch(`${API_URL}/calculate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subjects: subjects, threshold: threshold })
+                });
+                
+                if (!response.ok) throw new Error('Calculation failed');
+                
+                const data = await response.json();
+                displayResults(data);
+                updateAggregateDashboard(data.aggregate);
+                showNotification('Attendance calculated successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Failed to calculate. Make sure backend is running on http://localhost:5000', 'danger');
+            } finally {
+                calculateBtn.classList.remove('loading');
+                calculateBtn.innerHTML = '<i class="fas fa-calculator"></i> Calculate Attendance';
+            }
+        }
+
+        // Display Results - O(N)
+        function displayResults(data) {
+            resultsContainer.innerHTML = '';
+            resultsSection.classList.remove('hidden');
+            
+            data.subjects.forEach((subject, index) => {
+                setTimeout(() => {
+                    const card = createResultCard(subject);
+                    resultsContainer.appendChild(card);
+                }, index * 100);
+            });
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        // Create Result Card
+        function createResultCard(subject) {
+            const card = document.createElement('div');
+            const statusClass = subject.status === 'Safe' ? 'safe' : 'danger';
+            
+            card.className = `result-card ${statusClass}`;
+            card.innerHTML = `
+                <h3 class="result-subject">${subject.subject}</h3>
+                <div class="result-percentage">${subject.percentage}%</div>
+                <div class="result-badge ${statusClass}">
+                    <i class="fas fa-${subject.status === 'Safe' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                    ${subject.status}
+                </div>
+                <div class="result-info">
+                    <span>Present / Total</span>
+                    <strong>${subject.present} / ${subject.total}</strong>
+                </div>
+                ${subject.status === 'Danger' ? `
+                    <div class="result-info" style="background: rgba(239, 68, 68, 0.1);">
+                        <span><i class="fas fa-arrow-up"></i> Classes Needed</span>
+                        <strong>${subject.classes_needed}</strong>
+                    </div>
+                ` : `
+                    <div class="result-info" style="background: rgba(16, 185, 129, 0.1);">
+                        <span><i class="fas fa-check"></i> Can Skip</span>
+                        <strong>${subject.can_skip} classes</strong>
+                    </div>
+                `}
+            `;
+            
+            return card;
+        }
+
+        // Update Aggregate Dashboard
+        function updateAggregateDashboard(aggregate) {
+            aggregatePercentage.textContent = `${aggregate.percentage}%`;
+            aggregateStats.textContent = `${aggregate.total_present}/${aggregate.total_lectures} lectures attended`;
+            
+            aggregateStatus.textContent = aggregate.status;
+            aggregateStatus.className = `aggregate-badge ${aggregate.status === 'Safe' ? 'safe' : 'danger'}`;
+        }
+
+        // Reset Form
+        function resetForm() {
+            subjectTableBody.innerHTML = '';
+            addSubjectRow();
+            resultsSection.classList.add('hidden');
+            resultsContainer.innerHTML = '';
+            aggregatePercentage.textContent = '0.00%';
+            aggregateStatus.textContent = 'Calculating...';
+            aggregateStatus.className = 'aggregate-badge';
+            aggregateStats.textContent = '0/0 lectures attended';
+            thresholdInput.value = 75;
+            showNotification('Form reset successfully!', 'success');
+        }
+
+        // Show Notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? 'var(--accent-success)' : type === 'danger' ? 'var(--accent-danger)' : 'var(--accent-warning)'};
+                color: white;
+                border-radius: 12px;
+                font-weight: 600;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            `;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'}"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Make removeSubjectRow global
+        window.removeSubjectRow = removeSubjectRow;
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: scale(1); }
+                to { opacity: 0; transform: scale(0.9); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
